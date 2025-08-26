@@ -87,6 +87,34 @@ select:focus, input:focus {
     transform: scale(1.2);
 }
 
+/* 학생 리스트: 세로형 다단 컬럼 */
+.student-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px 16px;
+}
+
+.student-list label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.student-list label:hover {
+    background-color: #2a2a2a;
+    border-color: #666;
+}
+
+.student-list input[type="radio"] {
+    transform: scale(1.1);
+}
+
 button {
     background-color: #007bff;
     color: #fff;

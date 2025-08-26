@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 불참 신청 함수
 function submitAbsence() {
-    const studentSelect = document.getElementById('studentSelect');
+    const selectedStudentRadio = document.querySelector('input[name="student"]:checked');
     const reasonSelect = document.getElementById('reasonSelect');
     const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
     
     // 유효성 검사
-    if (!studentSelect.value) {
+    if (!selectedStudentRadio) {
         alert('학생을 선택해주세요.');
         return;
     }
@@ -44,7 +44,7 @@ function submitAbsence() {
     // 불참 데이터 생성
     const absence = {
         id: Date.now(), // 고유 ID
-        student: studentSelect.value,
+        student: selectedStudentRadio.value,
         periods: selectedPeriods,
         reason: reasonSelect.value,
         timestamp: timestamp,
@@ -58,7 +58,9 @@ function submitAbsence() {
     saveAbsenceData();
     
     // 폼 초기화
-    studentSelect.value = '';
+    if (selectedStudentRadio) {
+        selectedStudentRadio.checked = false;
+    }
     reasonSelect.value = '';
     checkboxes.forEach(cb => cb.checked = false);
     
@@ -75,6 +77,18 @@ function loadAbsenceData() {
     const saved = localStorage.getItem('absenceData');
     if (saved) {
         absenceData = JSON.parse(saved);
+        // 저장된 데이터 내 이름 변경(10410 박시후 → 10410 박재준) 마이그레이션
+        let migrated = false;
+        absenceData = absenceData.map(item => {
+            if (typeof item.student === 'string' && item.student.trim() === '10410 박시후') {
+                migrated = true;
+                return { ...item, student: '10410 박재준' };
+            }
+            return item;
+        });
+        if (migrated) {
+            saveAbsenceData();
+        }
     }
 }
 
